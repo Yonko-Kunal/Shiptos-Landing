@@ -1,8 +1,12 @@
+'use client'
+
 import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import shiptosTextLogo from '@/public/assets/Shiptos-Logo-Text.svg'
 import { Globe, ChevronDown } from 'lucide-react'
+import AnimatedText from '@/components/Animations/AnimatedText/AnimatedText'
+import AnimatedHeader from '@/components/Animations/AnimatedHeader/Animatedheader'
 
 // ── Footer link data ──────────────────────────────────────────────
 interface FooterColumn {
@@ -81,9 +85,11 @@ const Footer = () => {
                     className='h-6 w-auto'
                     priority
                 />
-                <p className='text-text-color text-[16px] 2xl:text-[18px] font-medium tracking-wide'>
-                    Built for high-volume logistics
-                </p>
+                <AnimatedText delay={0.2} >
+                    <p className='text-text-color text-[16px] 2xl:text-[18px] font-medium tracking-wide'>
+                        Built for high-volume logistics
+                    </p>
+                </AnimatedText>
             </div>
 
             {/* ── Link Grid ───────────────────────────────────── */}
@@ -93,19 +99,23 @@ const Footer = () => {
                     <div className='grid grid-cols-4 gap-12 2xl:gap-16 flex-1'>
                         {footerColumns.map((column) => (
                             <div key={column.title}>
-                                <h4 className='text-[14px] 2xl:text-[15px] font-bold text-text-color mb-5'>
-                                    {column.title}
-                                </h4>
+                                <AnimatedText delay={0.2}>
+                                    <h4 className='text-[14px] 2xl:text-[15px] font-bold text-text-color mb-5'>
+                                        {column.title}
+                                    </h4>
+                                </AnimatedText>
                                 <ul className='flex flex-col gap-2.5'>
                                     {column.links.map((link) => (
-                                        <li key={link.label}>
-                                            <Link
-                                                href={link.href}
-                                                className='text-[13px] 2xl:text-[14px] text-text-color/70 hover:text-primary transition-colors'
-                                            >
-                                                {link.label}
-                                            </Link>
-                                        </li>
+                                        <AnimatedText delay={0.2} key={link.label}>
+                                            <li>
+                                                <Link
+                                                    href={link.href}
+                                                    className='text-[13px] 2xl:text-[14px] text-text-color/70 hover:text-primary transition-colors'
+                                                >
+                                                    {link.label}
+                                                </Link>
+                                            </li>
+                                        </AnimatedText>
                                     ))}
                                 </ul>
                             </div>
@@ -127,7 +137,7 @@ const Footer = () => {
             <div className='border-t border-text-color/10 px-8 2xl:px-24 py-5'>
                 <div className='flex items-center justify-between'>
                     <p className='text-[12px] 2xl:text-[13px] text-text-color/60'>
-                        © 2024 Shiptos. All rights reserved.
+                        {new Date().getFullYear()} Shiptos · All rights reserved.
                     </p>
                     <div className='flex items-center gap-6'>
                         <Link href='#' className='text-[12px] 2xl:text-[13px] text-text-color/60 hover:text-primary transition-colors'>

@@ -1,5 +1,5 @@
 import React from 'react'
-import AnimatedHeader from './AnimatedHeader/Animatedheader'
+import AnimatedHeader from '@/components/Animations/AnimatedHeader/Animatedheader'
 
 const WhyShiptosQuestion = () => {
     return (

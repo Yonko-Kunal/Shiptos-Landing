@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { Mulish, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/layout/Navbar";
+import Navbar from "@/components/layout/Navbar/Navbar";
 import Footer from "@/components/layout/Footer";
 import { ReactLenis } from "@/lib/lenis";
+import MouseFollower from "@/components/Animations/MouseFollower/MouseFollower"
 
 const mulish = Mulish({
   variable: "--font-mulish",
@@ -35,6 +36,7 @@ export default function RootLayout({
     >
       <ReactLenis root>
         <body className="min-h-full flex flex-col text-text-color" suppressHydrationWarning>
+          <MouseFollower />
           <Navbar />
           {children}
           <Footer />

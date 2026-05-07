@@ -1,6 +1,6 @@
 import React from 'react'
 import Image from 'next/image'
-import AnimatedHeader from '@/components/AnimatedHeader/Animatedheader'
+import AnimatedHeader from '@/components/Animations/AnimatedHeader/Animatedheader'
 
 const Solution = () => {
     return (

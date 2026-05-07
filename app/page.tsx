@@ -11,11 +11,13 @@ import WhyShiptosQuestion from "@/components/WhyShiptosQuestion";
 import WhyShiptosAnswer from "@/components/WhyShiptosAnswer";
 import Stats from "@/components/Stats";
 import Blog from "@/components/Blog";
+import Testting from "@/components/Testting";
 
 export default function Home() {
   return (
     <>
       <Hero />
+      <Testting />
       <Problem />
       <WhatsTheSolution />
       <Solution />

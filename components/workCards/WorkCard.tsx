@@ -17,7 +17,7 @@ interface WorkCardProps {
 
 const WorkCard = ({ stepNumber, icon: Icon, title, description, tagsLabel, tags }: WorkCardProps) => {
     return (
-        <div className='bg-background border border-text-color/20 rounded-sm px-3 pb-8 pt-4 flex flex-col items-center w-full 2xl:h-[95%] md:h-[90%]'>
+        <div className='bg-background border border-text-color/20 px-3 pb-0 pt-4 flex flex-col items-center w-full 2xl:mt-40 mt-10'>
             <div className='w-full text-left'>
                 <p className='text-primary/40 tracking-widest font-bold 2xl:text-5xl md:text-3xl mb-6 font-HelveticaNeue '>{stepNumber}</p>
             </div>
@@ -26,9 +26,9 @@ const WorkCard = ({ stepNumber, icon: Icon, title, description, tagsLabel, tags 
                 <Icon className='2xl:w-12  2xl:h-12 w-8 h-8 text-primary stroke-[2.5px]' />
             </div>
 
-            <h3 className='2xl:text-[18px] md:text-[16px] font-bold text-text-color mb-4 text-center '>{title}</h3>
+            <h3 className='2xl:text-[24px] md:text-[20px] font-bold text-text-color mb-4 text-center '>{title}</h3>
 
-            <p className='text-text-color/80 text-center mb-10 2xl:text-[16px] md:text-[12px] leading-relaxed'>{description}</p>
+            <p className='text-text-color/80 text-center mb-10 2xl:text-[16px] md:text-[13px] leading-relaxed'>{description}</p>
 
             <div className='w-full flex flex-col mt-auto'>
                 <p className='text-[11px] font-bold tracking-widest text-[#666] uppercase mb-4'>{tagsLabel}</p>

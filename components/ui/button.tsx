@@ -9,9 +9,9 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        primary: "bg-primary text-background [a]:hover:bg-primary/80 border-none",
-        default: "bg-primary text-primary-foreground [a]:hover:bg-primary/80",
-        outline: "border-primary text-primary",
+        primary: "bg-primary text-background [a]:hover:bg-primary/80 border-none cursor-pointer",
+        default: "bg-primary text-primary-foreground [a]:hover:bg-primary/80 cursor-pointer",
+        outline: "border-primary text-primary cursor-pointer",
       },
       size: {
         default:
