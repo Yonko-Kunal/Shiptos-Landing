@@ -5,79 +5,49 @@ import AnimatedText from '@/components/Animations/AnimatedText/AnimatedText'
 import LogesticScene from '@/components/logistics/LogisticsScene'
 
 import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useGSAP } from '@gsap/react'
+
+if (typeof window !== 'undefined') {
+    gsap.registerPlugin(ScrollTrigger, useGSAP)
+}
 
 const WhyShiptosAnswer = () => {
 
-    const pathRef = useRef<SVGPathElement | null>(null)
+    const sectionRef = useRef<HTMLDivElement>(null)
 
     useGSAP(() => {
-        gsap.to(pathRef.current, {
-            strokeDashoffset: -200,
-            duration: 6,
-            repeat: -1,
-            ease: 'none',
-        })
-    })
+        if (!sectionRef.current) return
+
+        const truck = sectionRef.current.querySelector('#scrub-truck')
+
+        if (truck) {
+            gsap.fromTo(truck,
+                { x: '20vw' },
+                {
+                    x: '90vw',
+                    ease: 'none',
+                    scrollTrigger: {
+                        trigger: sectionRef.current,
+                        start: 'top top',
+                        end: '+=1500',
+                        scrub: 1,
+                        pin: true,
+                        pinSpacing: true,
+                    }
+                }
+            )
+        }
+    }, { scope: sectionRef })
 
     return (
-        <section className='relative overflow-hidden bg-text-color h-[70vh] 2xl:mx-[10%] md:mx-[6.7%]'>
+        <section ref={sectionRef} className='relative overflow-hidden bg-text-color h-screen w-full'>
 
-            {/* GRID */}
-            {/* <div
-                className='
-                    absolute inset-0 opacity-[0.04]
-                    bg-[linear-gradient(to_right,#ffffff_1px,transparent_1px),linear-gradient(to_bottom,#ffffff_1px,transparent_1px)]
-                    bg-size-[80px_80px]
-                '
-            /> */}
 
             <LogesticScene />
 
-            {/* <div
-                className='absolute inset-0'
-                style={{
-                    background: `radial-gradient(circle at center, rgba(255,107,53,0.1), transparent 60%)`
-                }}
-            /> */}
-
-            {/* SVG BACKGROUND
-            <svg
-                viewBox='0 0 1920 1080'
-                className='absolute inset-0 h-full w-[80%]'
-                preserveAspectRatio='xMidYMid slice'
-            >
-
-                ROUTE PATH
-                <path
-                    ref={pathRef}
-                    d='M 200 700 C 500 200, 900 500, 1400 250'
-                    stroke='#FF6B35'
-                    strokeWidth='2'
-                    fill='none'
-                    strokeDasharray='10 10'
-                />
-
-                NODE 1
-                <circle
-                    cx='200'
-                    cy='700'
-                    r='6'
-                    fill='#EB3B2F'
-                />
-
-                NODE 2
-                <circle
-                    cx='1400'
-                    cy='250'
-                    r='6'
-                    fill='#FF6B35'
-                />
-
-            </svg> */}
-
             {/* CONTENT */}
-            <div className='relative z-10 flex items-center justify-center h-full'>
+            <div className='relative z-10 flex items-center justify-center w-full h-full'>
 
                 <div className='2xl:w-[96%] w-[87%] mx-auto'>
 

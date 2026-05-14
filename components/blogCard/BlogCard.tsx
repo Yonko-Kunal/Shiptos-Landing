@@ -14,7 +14,7 @@ interface BlogCardProps {
 
 const BlogCard: React.FC<BlogCardProps> = ({ imageSrc, date, readTime, title, description, link = "#" }) => {
     return (
-        <div className='bg-white border border-primary/20 p-5 2xl:p-6 flex flex-col gap-5 2xl:gap-6 group h-full'>
+        <div className='bg-white border border-primary/20 p-5 2xl:p-6 flex flex-col gap-5 2xl:gap-6 group h-[80vh]'>
             {/* Image Container with Red Duotone Effect */}
             <div className='relative w-full aspect-[1.6] bg-primary overflow-hidden'>
                 {/* eslint-disable-next-line @next/next/no-img-element */}

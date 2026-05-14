@@ -35,7 +35,7 @@ export default function LogisticsScene() {
 
             {/* TOP GRAPH — slides down from off-screen with a crisp deceleration */}
             <motion.div
-                className='absolute top-[1%] right-0 2xl:w-[580px] md:w-[340px] opacity-40'
+                className='absolute top-[10%] right-0 2xl:w-[580px] md:w-[340px] opacity-40'
                 initial={{ opacity: 0, y: -60 }}
                 animate={isInView ? { opacity: 0.4, y: 0 } : {}}
                 transition={{
@@ -89,24 +89,13 @@ export default function LogisticsScene() {
                 <Path />
             </motion.div>
 
-            {/* TRUCK — waits for the road, then drives across with a realistic bounce */}
-            <motion.div
-                className='absolute bottom-[6.3%] left-[20%] 2xl:w-[180px] md:w-[100px]'
-                initial={{ opacity: 0, x: -60 }}
-                animate={isInView ? {
-                    opacity: [0, 1, 1, 1],
-                    x: [-60, 0, 400, 800],
-                    y: [0, 0, -2, 0, 2, 0, -1.5, 0, 1.5, 0, -1, 0],
-                } : {}}
-                transition={{
-                    duration: 6,
-                    delay: 1,
-                    repeat: 0,
-                    ease: 'easeInOut',
-                }}
+            {/* TRUCK — animated via GSAP in the parent component */}
+            <div
+                id='scrub-truck'
+                className='absolute bottom-[6.3%] left-[-10%] 2xl:w-[180px] md:w-[100px] z-20'
             >
                 <Truck />
-            </motion.div>
+            </div>
 
             {/* <motion.div
                 className='absolute bottom-[6.3%] left-[20%] 2xl:w-[180px] md:w-[100px]'

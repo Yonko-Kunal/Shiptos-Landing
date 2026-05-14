@@ -1,4 +1,13 @@
-import React from 'react'
+'use client'
+
+import React, { useEffect, useRef } from 'react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { MotionPathPlugin } from 'gsap/MotionPathPlugin'
+
+if (typeof window !== 'undefined') {
+    gsap.registerPlugin(ScrollTrigger, MotionPathPlugin)
+}
 
 // ── Stat data ─────────────────────────────────────────────────────
 const stats = [
@@ -16,51 +25,110 @@ const positions = [
     { x: 85, y: 60 },
 ]
 
-// Generate a smooth cubic bezier curve between two points
-function curvedPath(x1: number, y1: number, x2: number, y2: number): string {
-    // Control points: offset horizontally to create a smooth S-like curve
-    const dx = (x2 - x1) * 0.4
-    const cp1x = x1 + dx
-    const cp1y = y1
-    const cp2x = x2 - dx
-    const cp2y = y2
-    return `M ${x1} ${y1} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${x2} ${y2}`
+// Generate a smooth cubic bezier curve for the entire path
+const getContinuousPath = () => {
+    return positions.reduce((acc, pos, i) => {
+        if (i === 0) return `M ${pos.x * 10} ${pos.y * 4}`
+        const prev = positions[i - 1]
+        const dx = (pos.x * 10 - prev.x * 10) * 0.4
+        const cp1x = prev.x * 10 + dx
+        const cp1y = prev.y * 4
+        const cp2x = pos.x * 10 - dx
+        const cp2y = pos.y * 4
+        return `${acc} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${pos.x * 10} ${pos.y * 4}`
+    }, "")
 }
 
 const Stats = () => {
+    const containerRef = useRef<HTMLDivElement>(null)
+    const pathRef = useRef<SVGPathElement>(null)
+    const bubblesRef = useRef<(HTMLDivElement | null)[]>([])
+
+    // Initialize refs array
+    if (bubblesRef.current.length !== stats.length) {
+        bubblesRef.current = Array(stats.length).fill(null)
+    }
+
+    useEffect(() => {
+        if (!containerRef.current || !pathRef.current) return
+
+        const ctx = gsap.context(() => {
+            const totalPoints = positions.length;
+
+            bubblesRef.current.forEach((bubble, i) => {
+                if (!bubble) return;
+
+                // Center the element on the path coordinates
+                gsap.set(bubble, { 
+                    xPercent: -50, 
+                    yPercent: -50,
+                    left: 0,
+                    top: 0
+                });
+
+                const targetProgress = i / (totalPoints - 1);
+
+                // Animate from the start of the path (progress 0) to their respective target positions
+                gsap.fromTo(bubble, 
+                    {
+                        motionPath: {
+                            path: pathRef.current!,
+                            align: pathRef.current!,
+                            alignOrigin: [0.5, 0.5],
+                            start: 0,
+                            end: 0
+                        },
+                        opacity: 0,
+                        scale: 0.5
+                    },
+                    {
+                        motionPath: {
+                            path: pathRef.current!,
+                            align: pathRef.current!,
+                            alignOrigin: [0.5, 0.5],
+                            start: 0,
+                            end: targetProgress
+                        },
+                        opacity: 1,
+                        scale: 1,
+                        ease: "power1.inOut",
+                        scrollTrigger: {
+                            trigger: containerRef.current,
+                            start: "top 85%", 
+                            end: "center center", 
+                            scrub: 1,
+                        }
+                    }
+                )
+            });
+        }, containerRef)
+
+        return () => ctx.revert()
+    }, [])
+
     return (
-        <section className='w-full bg-background 2xl:py-24 md:py-16'>
+        <section ref={containerRef} className='w-full bg-background 2xl:py-24 md:py-16 overflow-hidden'>
             <div className='relative 2xl:h-[400px] md:h-[300px] max-w-6xl mx-auto'>
 
                 {/* Curved dashed connecting lines */}
                 <svg className='absolute inset-0 w-full h-full pointer-events-none' viewBox='0 0 1000 400' preserveAspectRatio='none'>
-                    {positions.slice(0, -1).map((pos, i) => {
-                        const next = positions[i + 1]
-                        // Map percentage positions to the 1000x400 viewBox
-                        const x1 = pos.x * 10
-                        const y1 = pos.y * 4
-                        const x2 = next.x * 10
-                        const y2 = next.y * 4
-                        return (
-                            <path
-                                key={i}
-                                d={curvedPath(x1, y1, x2, y2)}
-                                stroke='#EB3B2F'
-                                strokeOpacity='0.25'
-                                strokeWidth='2'
-                                strokeDasharray='8 8'
-                                fill='none'
-                            />
-                        )
-                    })}
+                    <path
+                        ref={pathRef}
+                        d={getContinuousPath()}
+                        stroke='#EB3B2F'
+                        strokeOpacity='0.25'
+                        strokeWidth='2'
+                        strokeDasharray='8 8'
+                        fill='none'
+                    />
                 </svg>
 
                 {/* Stat circles */}
                 {stats.map((stat, i) => (
                     <div
                         key={i}
-                        className='absolute -translate-x-1/2 -translate-y-1/2'
-                        style={{ left: `${positions[i].x}%`, top: `${positions[i].y}%` }}
+                        ref={(el) => { bubblesRef.current[i] = el }}
+                        className='absolute'
                     >
                         <div className='2xl:w-48 2xl:h-48 md:w-32 md:h-32 rounded-full bg-white border border-primary/20 flex flex-col items-center justify-center shadow-[6px_10px_25px_rgba(235,59,47,0.2)]'>
                             <span className='2xl:text-[32px] md:text-[22px] font-black text-primary leading-none'>

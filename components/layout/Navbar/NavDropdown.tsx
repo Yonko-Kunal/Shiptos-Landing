@@ -6,8 +6,6 @@ import { Button } from '@/components/ui/button'
 import { ChevronRight } from 'lucide-react'
 import { motion } from 'motion/react'
 import { NavDropdownContent } from './navData'
-import AnimatedText from '@/components/Animations/AnimatedText/AnimatedText.js'
-import AnimatedHeader from '@/components/Animations/AnimatedHeader/Animatedheader'
 
 
 interface NavDropdownProps {
@@ -55,6 +53,7 @@ const NavDropdown: React.FC<NavDropdownProps> = ({ content }) => {
                             <Link
                                 href={link.href}
                                 className="group/link flex items-center gap-4 py-3 2xl:py-3.5 hover:text-primary"
+
                             >
                                 <div className="flex items-center gap-4">
                                     <div className="flex items-center gap-4">

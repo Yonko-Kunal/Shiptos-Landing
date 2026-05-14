@@ -34,14 +34,14 @@ export default function RootLayout({
       lang="en"
       className={`${mulish.className} ${plexMono.variable} h-full antialiased`}
     >
-      <ReactLenis root>
-        <body className="min-h-full flex flex-col text-text-color" suppressHydrationWarning>
+      <body className="min-h-full flex flex-col text-text-color overflow-x-hidden" suppressHydrationWarning>
+        <ReactLenis root>
           <MouseFollower />
           <Navbar />
           {children}
           <Footer />
-        </body>
-      </ReactLenis>
+        </ReactLenis>
+      </body>
     </html>
   );
 }

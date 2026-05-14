@@ -9,8 +9,6 @@ import { ChevronRight } from 'lucide-react'
 import { AnimatePresence } from 'motion/react'
 import { navItems } from './navData'
 import NavDropdown from '@/components/layout/Navbar/NavDropdown'
-import AnimatedHeader from '@/components/Animations/AnimatedHeader/Animatedheader.js'
-import AnimatedText from '@/components/Animations/AnimatedText/AnimatedText.js'
 
 const Navbar = () => {
     const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
@@ -64,7 +62,7 @@ const Navbar = () => {
                                 className={`font-plexMono cursor-pointer flex items-center gap-1 transition-colors ${activeDropdown === item.name ? 'text-primary' : 'hover:text-primary'}`}
                                 onMouseEnter={() => item.nested ? handleOpen(item.name) : handleClose()}
                             >
-                                <Link href={item.href} className="flex items-center gap-1">
+                                <Link href={item.href} className="flex items-center gap-1" onClick={() => setActiveDropdown(null)}>
                                     {item.name}
                                     {item.nested && (
                                         <ChevronRight

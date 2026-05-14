@@ -51,7 +51,8 @@ const Woking = () => {
                     </div>
                     <p className='2xl:text-[16px] md:text-[12px] text-muted-text-color 2xl:w-xl w-[24rem] text-center'>From order intake to delivery optimization—every step is intelligently automated and continuously improved.</p>
                 </div>
-                <div className='flex bg-primary/5 px-20 py-10 items-center justify-center w-full'>
+                <div className=' flex bg-primary/5 px-5 2xl:px-20 py-10 items-center justify-center w-full overflow-hidden'>
+
                     <div className='flex items-center justify-center gap-10'>
                         {/* left side  */}
                         <div className='flex gap-8 items-start w-full max-w-5xl mx-auto'>
@@ -84,15 +85,15 @@ const Woking = () => {
 
                             {/* Processing Column */}
                             <div className='flex flex-col gap-2 mt-9 flex-1'>
-                                <div className='bg-white border border-primary/20 px-6 2xl:py-5 py-4'>
+                                <div className='bg-white border border-primary/20 px-3 2xl:py-5 py-2'>
                                     <h2 className='2xl:text-[18px] md:text-[16px] font-bold text-[#111] mb-2'>Data Processing</h2>
                                     <p className='2xl:text-[16px] md:text-[12px] text-[#555] leading-[1.4] pr-4'>Validation, normalization<br />and enrichment</p>
                                 </div>
-                                <div className='bg-white border border-primary/20 px-6 2xl:py-5 py-4'>
+                                <div className='bg-white border border-primary/20 px-3 2xl:py-5 py-2'>
                                     <h2 className='2xl:text-[18px] md:text-[16px] font-bold text-[#111] mb-2'>Constraints Modeling</h2>
                                     <p className='2xl:text-[16px] md:text-[12px] text-[#555] leading-[1.4] pr-4'>Time windows, capacity,<br />skills, SLAs, & more</p>
                                 </div>
-                                <div className='bg-white border border-primary/20 px-6 2xl:py-5 py-4'>
+                                <div className='bg-white border border-primary/20 px-3 2xl:py-5 py-2'>
                                     <h2 className='2xl:text-[18px] md:text-[16px] font-bold text-[#111] mb-2'>Optimization Algorithms</h2>
                                     <p className='2xl:text-[16px] md:text-[12px] text-[#555] leading-[1.4] pr-4'>AI/ML + Heuristics solve<br />millions of possibilities</p>
                                 </div>
@@ -104,7 +105,7 @@ const Woking = () => {
                         <div>
                             <div className='relative 2xl:w-50 w-40 2xl:h-50 h-40 rounded-full flex items-center justify-center border-2 border-dashed border-primary/20'>
                                 <div className='2xl:w-40 w-32 bg-white 2xl:h-40 h-32 rounded-full relative flex items-center justify-center shadow-[6px_10px_25px_rgba(235,59,47,0.2)]'>
-                                    <Image src="/assets/Shiptos-Logo.svg" alt="Shiptos" width={96} height={96} />
+                                    <Image style={{ width: 'auto', height: 'auto' }} src="/assets/Shiptos-Logo.svg" alt="Shiptos" width={96} height={96} />
                                 </div>
                                 <div></div>
                             </div>
@@ -113,17 +114,17 @@ const Woking = () => {
                         {/* right side */}
                         <div className='flex gap-8 items-start w-full max-w-5xl mx-auto'>
                             <div className='flex flex-col gap-2 mt-9 flex-1'>
-                                <div className='bg-white border border-primary/20 px-6 2xl:py-5 py-4'>
-                                    <h2 className='2xl:text-[18px] md:text-[16px] font-bold text-[#111] mb-2'>Data Processing</h2>
-                                    <p className='2xl:text-[16px] md:text-[12px] text-[#555] leading-[1.4] pr-4'>Validation, normalization<br />and enrichment</p>
+                                <div className='bg-white border border-primary/20 px-3 2xl:py-5 py-2'>
+                                    <h2 className='2xl:text-[18px] md:text-[16px] font-bold text-[#111] mb-2'>Dispatch Orchestration</h2>
+                                    <p className='2xl:text-[16px] md:text-[12px] text-[#555] leading-[1.4] pr-4'>Real-time assignment and notifications</p>
                                 </div>
-                                <div className='bg-white border border-primary/20 px-6 2xl:py-5 py-4'>
-                                    <h2 className='2xl:text-[18px] md:text-[16px] font-bold text-[#111] mb-2'>Constraints Modeling</h2>
-                                    <p className='2xl:text-[16px] md:text-[12px] text-[#555] leading-[1.4] pr-4'>Time windows, capacity,<br />skills, SLAs, & more</p>
+                                <div className='bg-white border border-primary/20 px-3 2xl:py-5 py-2'>
+                                    <h2 className='2xl:text-[18px] md:text-[16px] font-bold text-[#111] mb-2'>Real-time Visibility</h2>
+                                    <p className='2xl:text-[16px] md:text-[12px] text-[#555] leading-[1.4] pr-4'>Live tracking, alerts, and exceptions</p>
                                 </div>
-                                <div className='bg-white border border-primary/20 px-6 2xl:py-5 py-4'>
-                                    <h2 className='2xl:text-[18px] md:text-[16px] font-bold text-[#111] mb-2'>Optimization Algorithms</h2>
-                                    <p className='2xl:text-[16px] md:text-[12px] text-[#555] leading-[1.4] pr-4'>AI/ML + Heuristics solve<br />millions of possibilities</p>
+                                <div className='bg-white border border-primary/20 px-3 2xl:py-5 py-2'>
+                                    <h2 className='2xl:text-[18px] md:text-[16px] font-bold text-[#111] mb-2'>Feedback Loop</h2>
+                                    <p className='2xl:text-[16px] md:text-[12px] text-[#555] leading-[1.4] pr-4'>Learn from every delivery to improve continuously</p>
                                 </div>
                             </div>
 

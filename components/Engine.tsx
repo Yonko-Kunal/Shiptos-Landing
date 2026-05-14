@@ -14,118 +14,160 @@ const cardsRight = [
     "Capture Feedback"
 ]
 
-// Generates an SVG path for a step curve with rounded corners
-function generateStepCurve(x1: number, y1: number, x2: number, y2: number) {
-    const midX = (x1 + x2) / 2;
-    const dirX = x2 > x1 ? 1 : -1;
-    const dirY = y2 > y1 ? 1 : -1;
+// ── All layout in ONE SVG coordinate space ──────────────────────────
+// Engine SVG intrinsic size
+const ENGINE_W = 450
+const ENGINE_H = 325
 
-    const maxRadiusX = Math.abs(x1 - midX);
-    const maxRadiusY = Math.abs(y1 - y2) / 2;
-    const radius = Math.min(12, maxRadiusX, maxRadiusY);
+// Canvas = cards + gaps + engine
+const CARD_W = 200
+const CARD_H = 46
+const GAP = 30 // horizontal gap between cards and engine
+const CANVAS_W = CARD_W + GAP + ENGINE_W + GAP + CARD_W // 910
+const CANVAS_H = ENGINE_H // 325
 
-    if (radius < 1) {
-        return `M ${x1} ${y1} L ${x2} ${y2}`;
-    }
+// Engine position within canvas (centered vertically, horizontally between cards)
+const ENGINE_X = CARD_W + GAP // 230
+const ENGINE_Y = 0
 
-    return `M ${x1} ${y1} H ${midX - dirX * radius} Q ${midX} ${y1} ${midX} ${y1 + dirY * radius} V ${y2 - dirY * radius} Q ${midX} ${y2} ${midX + dirX * radius} ${y2} L ${x2} ${y2}`;
+// ── Node positions ── taken directly from Engine.svg source ─────────
+// Left nodes: circles at cx=6.5 in the SVG
+const LEFT_NODE_X = 6.5
+// Right nodes: circles at cx=443.5 in the SVG
+const RIGHT_NODE_X = 443.5
+// Y positions for all 4 nodes (both sides identical)
+const NODE_YS = [159.5, 178.5, 197.5, 216.5]
+
+// Convert engine-local coords → canvas coords (just add the offset)
+const engineNodes = {
+    left: NODE_YS.map(y => ({ x: ENGINE_X + LEFT_NODE_X, y: ENGINE_Y + y })),
+    right: NODE_YS.map(y => ({ x: ENGINE_X + RIGHT_NODE_X, y: ENGINE_Y + y })),
 }
 
-// --- Layout constants ---
-// Engine SVG native size
-const SVG_W = 450;
-const SVG_H = 325;
+// Card layout — evenly distributed across the full canvas height
+const CARD_COUNT = 4
+const cardSpacing = (CANVAS_H - CARD_COUNT * CARD_H) / (CARD_COUNT - 1) // ≈41.67
 
-// Desired render size for the engine graphic
-const ENGINE_W = 450;
-const ENGINE_H = (ENGINE_W / SVG_W) * SVG_H; // preserve exact aspect ratio = 252.78
+const leftCards = cardsLeft.map((_, i) => {
+    const y = i * (CARD_H + cardSpacing)
+    return { x: 0, y, centerY: y + CARD_H / 2 }
+})
 
-// Overall canvas
-const CANVAS_W = 1050;
-const CANVAS_H = 325;
-const CARD_W = 220;
-const CARD_H = 50;
+const rightCards = cardsRight.map((_, i) => {
+    const y = i * (CARD_H + cardSpacing)
+    return { x: CANVAS_W - CARD_W, y, centerY: y + CARD_H / 2 }
+})
 
-// Center the engine graphic in the canvas
-const ENGINE_LEFT = (CANVAS_W - ENGINE_W) / 2; // 350
-const ENGINE_TOP = (CANVAS_H - ENGINE_H) / 2;  // 36.11
+// ── Step-curve path with rounded corners ────────────────────────────
+function stepPath(x1: number, y1: number, x2: number, y2: number): string {
+    const mx = (x1 + x2) / 2
+    const dx = Math.sign(x2 - x1)
+    const dy = Math.sign(y2 - y1)
+    const r = Math.min(12, Math.abs(x1 - mx), Math.abs(y1 - y2) / 2)
 
-// Scale factor from intrinsic SVG coords to rendered pixels
-const SCALE = ENGINE_W / SVG_W; // 0.7778
+    if (r < 1) return `M${x1},${y1}L${x2},${y2}`
 
-// Intrinsic node positions from Engine.svg source
-const LEFT_NODE_X_INTRINSIC = 6.5;
-const RIGHT_NODE_X_INTRINSIC = 443.5;
-const NODE_YS_INTRINSIC = [159.5, 178.5, 197.5, 216.5];
+    return [
+        `M${x1},${y1}`,
+        `H${mx - dx * r}`,
+        `Q${mx},${y1},${mx},${y1 + dy * r}`,
+        `V${y2 - dy * r}`,
+        `Q${mx},${y2},${mx + dx * r},${y2}`,
+        `H${x2}`,
+    ].join(' ')
+}
 
-// Rendered node positions
-const engineLeftX = ENGINE_LEFT + LEFT_NODE_X_INTRINSIC * SCALE;
-const engineRightX = ENGINE_LEFT + RIGHT_NODE_X_INTRINSIC * SCALE;
-const engineYs = NODE_YS_INTRINSIC.map(y => ENGINE_TOP + y * SCALE);
-
-// Card Y centers (4 cards of CARD_H, distributed with justify-between in CANVAS_H)
-// gap = (325 - 4*50) / 3 = 41.67
-const cardGap = (CANVAS_H - 4 * CARD_H) / 3;
-const cardYs = Array.from({ length: 4 }, (_, i) => i * (CARD_H + cardGap) + CARD_H / 2);
+// Dot radius for card connection indicators
+const DOT_R = 5
 
 const Engine = () => {
     return (
-        <div className='flex justify-start xl:justify-center items-center w-full py-20 bg-background overflow-x-auto px-6 h-[80vh]'>
-            <div className='relative shrink-0' style={{ width: CANVAS_W, height: CANVAS_H }}>
+        <div className='flex justify-center items-center w-full py-20 bg-background px-6'>
+            <svg
+                viewBox={`0 0 ${CANVAS_W} ${CANVAS_H}`}
+                className='w-full max-w-[910px]'
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                role="img"
+                aria-label="Central Nervous System Engine diagram"
+            >
+                {/* ── Connection paths (behind everything) ── */}
+                {leftCards.map((card, i) => (
+                    <path
+                        key={`lc-${i}`}
+                        d={stepPath(card.x + CARD_W, card.centerY, engineNodes.left[i].x, engineNodes.left[i].y)}
+                        stroke="#EB3B2F"
+                        strokeOpacity="0.4"
+                        strokeWidth="1.5"
+                    />
+                ))}
+                {rightCards.map((card, i) => (
+                    <path
+                        key={`rc-${i}`}
+                        d={stepPath(card.x, card.centerY, engineNodes.right[i].x, engineNodes.right[i].y)}
+                        stroke="#EB3B2F"
+                        strokeOpacity="0.4"
+                        strokeWidth="1.5"
+                    />
+                ))}
 
-                {/* SVG Overlay for Connections */}
-                <svg className='absolute inset-0 pointer-events-none' width={CANVAS_W} height={CANVAS_H} viewBox={`0 0 ${CANVAS_W} ${CANVAS_H}`} fill="none">
-                    {/* Left connections */}
-                    {cardYs.map((y, i) => (
-                        <path
-                            key={`left-${i}`}
-                            d={generateStepCurve(CARD_W, y, engineLeftX, engineYs[i])}
-                            stroke="#EB3B2F"
-                            strokeOpacity="0.4"
-                            strokeWidth="1.5"
-                            fill="none"
+                {/* ── Left cards ── */}
+                {leftCards.map((card, i) => (
+                    <g key={`left-${i}`}>
+                        <rect
+                            x={card.x} y={card.y}
+                            width={CARD_W} height={CARD_H}
+                            rx={4} fill="white"
+                            stroke="#EB3B2F" strokeOpacity="0.2" strokeWidth="1"
                         />
-                    ))}
-                    {/* Right connections */}
-                    {cardYs.map((y, i) => (
-                        <path
-                            key={`right-${i}`}
-                            d={generateStepCurve(CANVAS_W - CARD_W, y, engineRightX, engineYs[i])}
-                            stroke="#EB3B2F"
-                            strokeOpacity="0.4"
-                            strokeWidth="1.5"
-                            fill="none"
+                        <text
+                            x={card.x + CARD_W / 2} y={card.centerY}
+                            textAnchor="middle" dominantBaseline="central"
+                            fontSize="13" fontWeight="700" fill="#1a1a1a"
+                            style={{ fontFamily: 'var(--font-mulish), sans-serif' }}
+                        >
+                            {cardsLeft[i]}
+                        </text>
+                        {/* Connection dot on right edge */}
+                        <circle
+                            cx={card.x + CARD_W} cy={card.centerY}
+                            r={DOT_R} fill="#EB3B2F"
                         />
-                    ))}
-                </svg>
+                    </g>
+                ))}
 
-                {/* Left Cards */}
-                <div className='absolute left-0 top-0 h-full flex flex-col justify-between' style={{ width: CARD_W }}>
-                    {cardsLeft.map((text, i) => (
-                        <div key={i} className='bg-white border border-primary/20 flex items-center justify-center relative' style={{ height: CARD_H }}>
-                            <span className='text-[14px] font-bold text-text-color'>{text}</span>
-                            <div className='absolute -right-1.5 top-1/2 -translate-y-1/2 w-3 h-3 bg-primary rounded-full' />
-                        </div>
-                    ))}
-                </div>
+                {/* ── Right cards ── */}
+                {rightCards.map((card, i) => (
+                    <g key={`right-${i}`}>
+                        <rect
+                            x={card.x} y={card.y}
+                            width={CARD_W} height={CARD_H}
+                            rx={4} fill="white"
+                            stroke="#EB3B2F" strokeOpacity="0.2" strokeWidth="1"
+                        />
+                        <text
+                            x={card.x + CARD_W / 2} y={card.centerY}
+                            textAnchor="middle" dominantBaseline="central"
+                            fontSize="13" fontWeight="700" fill="#1a1a1a"
+                            style={{ fontFamily: 'var(--font-mulish), sans-serif' }}
+                        >
+                            {cardsRight[i]}
+                        </text>
+                        {/* Connection dot on left edge */}
+                        <circle
+                            cx={card.x} cy={card.centerY}
+                            r={DOT_R} fill="#EB3B2F"
+                        />
+                    </g>
+                ))}
 
-                {/* Center Engine Graphic — use raw img for exact pixel sizing */}
-                <div className='absolute z-10' style={{ left: ENGINE_LEFT, top: ENGINE_TOP, width: ENGINE_W, height: ENGINE_H }}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src="/assets/Engine.svg" alt="Central Nervous System Engine" width={ENGINE_W} height={ENGINE_H} style={{ display: 'block', width: ENGINE_W, height: ENGINE_H }} />
-                </div>
-
-                {/* Right Cards */}
-                <div className='absolute right-0 top-0 h-full flex flex-col justify-between' style={{ width: CARD_W }}>
-                    {cardsRight.map((text, i) => (
-                        <div key={i} className='bg-white border border-primary/20 flex items-center justify-center relative' style={{ height: CARD_H }}>
-                            <span className='text-[14px] font-bold text-text-color'>{text}</span>
-                            <div className='absolute -left-1.5 top-1/2 -translate-y-1/2 w-3 h-3 bg-primary rounded-full' />
-                        </div>
-                    ))}
-                </div>
-
-            </div>
+                {/* ── Engine graphic (positioned exactly in SVG space) ── */}
+                <image
+                    href="/assets/Engine.svg"
+                    x={ENGINE_X} y={ENGINE_Y}
+                    width={ENGINE_W} height={ENGINE_H}
+                />
+            </svg>
         </div>
     )
 }
