@@ -6,7 +6,6 @@ import Link from 'next/link'
 import shiptosTextLogo from '@/public/assets/Shiptos-Logo-Text.svg'
 import { Globe, ChevronDown } from 'lucide-react'
 import AnimatedText from '@/components/Animations/AnimatedText/AnimatedText'
-import AnimatedHeader from '@/components/Animations/AnimatedHeader/Animatedheader'
 
 // ── Footer link data ──────────────────────────────────────────────
 interface FooterColumn {
@@ -78,7 +77,7 @@ const Footer = () => {
     return (
         <footer className='w-full bg-background'>
             {/* ── Top Banner ──────────────────────────────────── */}
-            <div className='flex items-center justify-between w-full px-8 2xl:px-24 py-6 border-b border-t border-text-color/10 '>
+            <div className='flex flex-col md:flex-row items-center justify-between w-full px-8 2xl:px-24 py-6 border-b border-t border-text-color/10 '>
                 <Image
                     src={shiptosTextLogo}
                     alt='Shiptos Logo'
@@ -94,9 +93,9 @@ const Footer = () => {
 
             {/* ── Link Grid ───────────────────────────────────── */}
             <div className='px-8 2xl:px-24 py-14 2xl:py-16'>
-                <div className='flex justify-between'>
+                <div className='flex flex-col md:flex-row justify-between'>
                     {/* Columns */}
-                    <div className='grid grid-cols-4 gap-12 2xl:gap-16 flex-1'>
+                    <div className='grid grid-cols-1 md:grid-cols-4 md:gap-12 gap-4 2xl:gap-16 flex-1'>
                         {footerColumns.map((column) => (
                             <div key={column.title}>
                                 <AnimatedText delay={0.2}>
@@ -104,7 +103,7 @@ const Footer = () => {
                                         {column.title}
                                     </h4>
                                 </AnimatedText>
-                                <ul className='flex flex-col gap-2.5'>
+                                <ul className='flex flex-col md:gap-2.5 gap-1'>
                                     {column.links.map((link) => (
                                         <AnimatedText delay={0.2} key={link.label}>
                                             <li>
@@ -135,7 +134,7 @@ const Footer = () => {
 
             {/* ── Bottom Bar ──────────────────────────────────── */}
             <div className='border-t border-text-color/10 px-8 2xl:px-24 py-5'>
-                <div className='flex items-center justify-between'>
+                <div className='flex flex-col md:flex-row gap-4 items-center justify-between'>
                     <p className='text-[12px] 2xl:text-[13px] text-text-color/60'>
                         {new Date().getFullYear()} Shiptos · All rights reserved.
                     </p>

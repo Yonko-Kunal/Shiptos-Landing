@@ -4,7 +4,6 @@ import "./globals.css";
 import Navbar from "@/components/layout/Navbar/Navbar";
 import Footer from "@/components/layout/Footer";
 import { ReactLenis } from "@/lib/lenis";
-import MouseFollower from "@/components/Animations/MouseFollower/MouseFollower"
 
 const mulish = Mulish({
   variable: "--font-mulish",
@@ -32,11 +31,10 @@ export default function RootLayout({
   return (
     <html suppressHydrationWarning
       lang="en"
-      className={`${mulish.className} ${plexMono.variable} h-full antialiased`}
+      className={`${mulish.className} ${plexMono.variable} h-full antialiased overflow-x-hidden`}
     >
-      <body className="min-h-full flex flex-col text-text-color overflow-x-hidden" suppressHydrationWarning>
+      <body className="min-h-full flex flex-col text-text-color overflow-x-hidden max-w-full" suppressHydrationWarning>
         <ReactLenis root>
-          <MouseFollower />
           <Navbar />
           {children}
           <Footer />

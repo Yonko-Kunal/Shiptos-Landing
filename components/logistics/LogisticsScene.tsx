@@ -21,7 +21,7 @@ export default function LogisticsScene() {
 
             {/* Equation — drifts in from the left with a subtle float */}
             <motion.div
-                className='absolute top-[15%] left-[5%] 2xl:w-[200px] md:w-[120px] opacity-40'
+                className='absolute md:top-[15%] top-[35%] left-[5%] 2xl:w-[200px] md:w-[120px] w-[160px] opacity-40'
                 initial={{ opacity: 0, x: -40, y: 10 }}
                 animate={isInView ? { opacity: 0.4, x: 0, y: [10, 0, 6, 0] } : {}}
                 transition={{
@@ -35,7 +35,7 @@ export default function LogisticsScene() {
 
             {/* TOP GRAPH — slides down from off-screen with a crisp deceleration */}
             <motion.div
-                className='absolute top-[10%] right-0 2xl:w-[580px] md:w-[340px] opacity-40'
+                className='absolute top-[10%] right-0 2xl:w-[580px] md:w-[340px] w-[340px] opacity-40'
                 initial={{ opacity: 0, y: -60 }}
                 animate={isInView ? { opacity: 0.4, y: 0 } : {}}
                 transition={{
@@ -49,7 +49,7 @@ export default function LogisticsScene() {
 
             {/* LEFT WAREHOUSE — rises from the ground */}
             <motion.div
-                className='absolute bottom-[7%] left-[5%] 2xl:w-[230px] md:w-[140px] opacity-30'
+                className='absolute bottom-[7%] left-[5%] 2xl:w-[230px] md:w-[140px] w-[120px] opacity-30'
                 initial={{ opacity: 0, y: 50, scale: 0.92 }}
                 animate={isInView ? { opacity: 0.3, y: 0, scale: 1 } : {}}
                 transition={{
@@ -63,7 +63,7 @@ export default function LogisticsScene() {
 
             {/* RIGHT BUILDINGS — rises from the ground, staggered after warehouse */}
             <motion.div
-                className='absolute bottom-[12%] right-[5%] 2xl:w-[250px]  md:w-[150px] opacity-20'
+                className='absolute md:bottom-[12%] bottom-[8%] right-[5%] 2xl:w-[250px]  md:w-[150px] w-[120px] opacity-20'
                 initial={{ opacity: 0, y: 50, scale: 0.92 }}
                 animate={isInView ? { opacity: 0.2, y: 0, scale: 1 } : {}}
                 transition={{
@@ -92,7 +92,7 @@ export default function LogisticsScene() {
             {/* TRUCK — animated via GSAP in the parent component */}
             <div
                 id='scrub-truck'
-                className='absolute bottom-[6.3%] left-[-10%] 2xl:w-[180px] md:w-[100px] z-20'
+                className='absolute bottom-[6.3%] left-[-10%] 2xl:w-[180px] md:w-[100px] w-[100px] z-20'
             >
                 <Truck />
             </div>

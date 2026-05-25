@@ -1,15 +1,12 @@
 'use client'
 
-import React, { useRef } from "react"
-
+import React, { useRef, useEffect, useState } from "react"
 import gsap from "gsap"
 import { SplitText } from "gsap/SplitText"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { useGSAP } from "@gsap/react"
 
 import "./AnimatedHeader.css"
-
-gsap.registerPlugin(SplitText, ScrollTrigger)
 
 export default function AnimatedHeader({
     children,
@@ -21,17 +18,23 @@ export default function AnimatedHeader({
 }) {
     const containerRef = useRef(null)
     const splitRef = useRef(null)
+    const [mounted, setMounted] = useState(false)
+
+    useEffect(() => {
+        gsap.registerPlugin(SplitText, ScrollTrigger)
+        setMounted(true)
+    }, [])
 
     useGSAP(() => {
-        const el = containerRef.current;
-        if (!el) return;
+        if (!mounted || !containerRef.current) return;
 
-        splitRef.current = SplitText.create(el, {
+        const el = containerRef.current.querySelector('.animated-header-content') || containerRef.current;
+
+        splitRef.current = new SplitText(el, {
             type: "lines, words, chars",
             linesClass: "line",
             wordsClass: "word",
             charsClass: "char",
-            autoSplit: true
         });
 
         const { chars, lines } = splitRef.current;
@@ -77,10 +80,7 @@ export default function AnimatedHeader({
                 onEnter: () => tl.restart(),
                 onLeaveBack: () => tl.pause(0)
             })
-            return
-        }
-
-        if (scrub) {
+        } else if (scrub) {
             const tl = gsap.timeline({ paused: true })
             animate(tl)
 
@@ -91,28 +91,30 @@ export default function AnimatedHeader({
                 scrub: true,
                 animation: tl
             })
-            return
+        } else {
+            const tl = gsap.timeline({ delay });
+            animate(tl)
         }
 
-        const tl = gsap.timeline({ delay });
-        animate(tl)
+        return () => {
+            if (splitRef.current) {
+                splitRef.current.revert()
+            }
+        }
 
-        return () => splitRef.current?.revert()
-
-    },
-        {
-            scope: containerRef
-        })
+    }, {
+        scope: containerRef,
+        dependencies: [mounted]
+    })
 
     if (!React.isValidElement(children)) return null;
 
-    return React.cloneElement(children, {
-        ref: containerRef,
-        className: [
-            children.props?.className || "",
-            "animated-header",
-        ]
-            .filter(Boolean)
-            .join(" "),
-    });
+    // Wrapper div isolates SplitText DOM mutations from React's tree
+    return (
+        <div ref={containerRef} className="animated-header-wrapper">
+            {React.cloneElement(children, {
+                className: `${children.props?.className || ""} animated-header-content`.trim()
+            })}
+        </div>
+    );
 }

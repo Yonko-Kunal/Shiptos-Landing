@@ -26,7 +26,7 @@ const WhyShiptosAnswer = () => {
                 { x: '20vw' },
                 {
                     x: '90vw',
-                    ease: 'none',
+                    ease: 'anticipate',
                     scrollTrigger: {
                         trigger: sectionRef.current,
                         start: 'top top',
@@ -41,9 +41,7 @@ const WhyShiptosAnswer = () => {
     }, { scope: sectionRef })
 
     return (
-        <section ref={sectionRef} className='relative overflow-hidden bg-text-color h-screen w-full'>
-
-
+        <section ref={sectionRef} className='relative overflow-hidden bg-text-color h-screen w-full top-0'>
             <LogesticScene />
 
             {/* CONTENT */}
@@ -54,11 +52,13 @@ const WhyShiptosAnswer = () => {
                     <AnimatedText animateOnscroll>
                         <h2 className='
                             font-medium
-                            text-[26px]
+                            text-[20px]
+                            md:text-[26px]
                             2xl:text-[30px]
                             text-background
                             2xl:max-w-[45%]
-                            max-w-[62%]
+                            md:max-w-[62%]
+                            max-w-full
                             text-center
                             mx-auto
                             tracking-[1.6%]

@@ -15,14 +15,13 @@ const Testting = () => {
 
     useGSAP(() => {
         const ctx = gsap.context(() => {
-
             gsap.fromTo(
                 imageRef.current,
                 {
                     rotateX: 70,
-                    scale: 0.92,
+                    scale: 0.9,
                     y: 180,
-                    z: -500,        // reduced (700 was too much)
+                    z: -500,
                     opacity: 0,
                 },
                 {
@@ -31,16 +30,15 @@ const Testting = () => {
                     y: 0,
                     z: 0,
                     opacity: 1,
-                    ease: 'expo.out', // smoother than power3
+                    ease: 'expo.out',
                     scrollTrigger: {
                         trigger: containerRef.current,
-                        start: 'top 85%',   // starts a bit earlier
+                        start: 'top 85%',
                         end: 'center top',
-                        scrub: 0.6,         // smoother scroll sync
+                        scrub: 0.6,
                     }
                 }
             )
-
         }, containerRef)
 
         return () => ctx.revert()
@@ -49,20 +47,20 @@ const Testting = () => {
     return (
         <div
             ref={containerRef}
-            className='w-[94%] 2xl:w-[84%] mx-auto min-h-screen flex items-center justify-center py-24 overflow-hidden'
-            style={{ perspective: '1600px' }}  // slightly deeper perspective
+            className='w-full min-h-screen flex items-center justify-center py-16 md:py-24 px-4 overflow-hidden'
+            style={{ perspective: '1600px' }}
         >
             <div
                 ref={imageRef}
-                className='w-full max-w-full px-5 md:px-10 will-change-transform'
+                className='w-full max-w-[380px] md:max-w-6xl will-change-transform'
                 style={{ transformStyle: 'preserve-3d' }}
             >
-                <div className="relative w-full overflow-hidden shadow-2xl border border-white/10 rounded-2xl">
+                <div className='relative overflow-hidden shadow-2xl border border-white/10 rounded-2xl'>
                     <Image
                         src={TestingScreen}
-                        alt="TestingScreen"
-                        className='w-full h-auto object-cover'
+                        alt='TestingScreen'
                         priority
+                        className='w-full h-[75vh] md:h-auto object-cover md:object-contain'
                     />
                 </div>
             </div>

@@ -17,7 +17,7 @@ export default function Home() {
   return (
     <>
       <Hero />
-      <Testting />
+      {/* <Testting /> */}
       <Problem />
       <WhatsTheSolution />
       <Solution />
